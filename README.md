@@ -11,7 +11,7 @@ The full application is available as a compiled release.
 - Lightweight and fast
 
 ## Download
-👉 Visit the **Releases** section to download the latest build.
+Visit the **Releases** section to download the latest build.
 
 ## Included Source
 The following modules are provided:
