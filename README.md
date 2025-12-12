@@ -1,21 +1,172 @@
-# Pi-hole Desktop Controller
+# Pi-hole Desktop Controller (Partial Open Source Release)
 
-A Windows desktop tool for managing Pi-hole via SSH.  
-This repository contains connection handling and command execution logic only.  
-The full application is available as a compiled release.
+This repository contains the connection and command logic used by the Pi-hole Desktop Controller application.  
+Only the SSH and command-related components are provided here.  
+The complete user interface, settings system, statistics logic, and other internal features are not included.  
+You can download the fully compiled application from the Releases section.
 
-## Features
-- Connect to Pi-hole via SSH
-- Execute Pi-hole commands
-- Query and manage DNS statistics
-- Lightweight and fast
+---
 
-## Download
-Visit the **Releases** section to download the latest build.
+## Purpose of This Repository
 
-## Included Source
-The following modules are provided:
-- SSH Connection Logic
-- Command Execution Logic
+This repository provides the communication layer of the application, allowing developers to understand how Pi-hole can be controlled through SSH.
 
-UI, full application logic, and additional internal components remain private.
+The source code here covers:
+
+- Creating and managing SSH connections  
+- Running Pi-hole commands  
+- Enabling and disabling Pi-hole  
+- Executing custom Linux commands  
+
+All other parts of the application remain private.
+
+---
+
+## Included Source Code
+
+### 1. SSH Connection Manager  
+**Location:**  
+```
+Source/Connection/SshConnectionManager.cs
+```
+
+This class manages connection settings, opens and closes SSH sessions, and executes commands.
+
+### 2. Pi-hole Command Helper  
+**Location:**  
+```
+Source/Commands/SshCommands.cs
+```
+
+This class provides simple methods for:
+
+- Enabling Pi-hole  
+- Disabling Pi-hole for a chosen duration  
+- Running custom commands  
+
+---
+
+## Preparing Your Pi-hole System
+
+The desktop controller requires a few things to be configured on your Pi-hole device.  
+Depending on whether Pi-hole runs on Raspberry Pi OS or a virtual machine, the steps may differ.
+
+---
+
+### 1. Install SQLite3
+
+SQLite3 is required for Pi-hole statistics and database queries.
+
+First connect to your Pi-hole via SSH:
+
+```
+ssh username@your-pihole-ip
+```
+
+Then install SQLite3:
+
+```
+sudo apt update
+sudo apt install sqlite3
+```
+
+Many Raspberry Pi OS images include SQLite3 already.  
+VM installations often do not.
+
+---
+
+### 2. Configure sudo permissions (if your OS requires it)
+
+Raspberry Pi OS usually does not require any sudo configuration changes.  
+Other Linux distributions (Ubuntu, Debian server, VM environments) may require passwordless access for Pi-hole commands.
+
+Open the sudoers editor:
+
+```
+sudo visudo
+```
+
+Scroll to the bottom and locate:
+
+```
+#includedir /etc/sudoers.d
+```
+
+You must place the following two lines **directly above** the includedir entry:
+
+```
+username ALL=(ALL) NOPASSWD: /usr/local/bin/pihole
+username ALL=(ALL) NOPASSWD: /usr/bin/sqlite3
+#includedir /etc/sudoers.d
+```
+
+Replace `username` with your actual Linux username.
+
+If these rules are missing or placed incorrectly, the controller will not be able to read Pi-hole status or statistics.
+
+---
+
+## Example Usage
+
+Full example located in:
+
+```
+Examples/ExampleUsage.cs
+```
+
+Short sample:
+
+```csharp
+var manager = new SshConnectionManager();
+manager.Configure("192.168.1.100", 22, "pi", "password");
+manager.Connect();
+
+string result = manager.RunCommand("pihole status");
+Console.WriteLine(result);
+
+manager.Disconnect();
+
+var cmd = new SshCommands();
+cmd.SetCredentials("192.168.1.100", 22, "pi", "password");
+await cmd.EnablePiHoleAsync();
+```
+
+---
+
+## What Is Not Included
+
+The following components are not part of this public repository:
+
+- All WPF user interface files  
+- Live log streaming logic  
+- Smart scroll helpers  
+- Settings manager and encrypted password system  
+- Statistics logic (lifetime/today queries)  
+- UI converters, helpers, and interface code  
+
+These remain private as part of the full application.
+
+---
+
+## Downloading the Application
+
+A prebuilt version of Pi-hole Desktop Controller is available in the **Releases** section.  
+No compilation is required to use the application.
+
+---
+
+## License
+
+The code in this repository is released under the MIT License.  
+This applies only to the files published here.  
+All remaining application components are closed-source.
+
+---
+
+## Notes
+
+- SSH access must be enabled on your Pi-hole device.  
+- SQLite3 is required for statistics-related features.  
+- Some systems require modifying sudoers; Raspberry Pi OS generally does not.  
+- The code provided here is intended only as a reference for SSH and command execution.
+
