@@ -1,77 +1,48 @@
-using System.Threading.Tasks;
+using System;
 using Renci.SshNet;
 
 namespace PiholeController.Public
 {
-    public class SshCommands
+    public class SshConnectionManager : IDisposable
     {
-        private string _host;
-        private int _port;
-        private string _username;
-        private string _password;
+        private SshClient _client;
+        private ConnectionInfo _connectionInfo;
 
-        public void SetCredentials(string host, int port, string username, string password)
+        public bool IsConnected => _client?.IsConnected ?? false;
+
+        public void Configure(string host, int port, string username, string password)
         {
-            _host = host;
-            _port = port;
-            _username = username;
-            _password = password;
+            var auth = new PasswordAuthenticationMethod(username, password);
+            _connectionInfo = new ConnectionInfo(host, port, username, auth);
         }
 
-        private SshClient CreateClient()
+        public void Connect()
         {
-            return new SshClient(_host, _port, _username, _password);
+            if (_connectionInfo == null)
+                throw new InvalidOperationException("Connection not configured.");
+
+            _client = new SshClient(_connectionInfo);
+            _client.Connect();
         }
 
-        public async Task<bool> EnablePiHoleAsync()
+        public string RunCommand(string command)
         {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using var ssh = CreateClient();
-                    ssh.Connect();
-                    var cmd = ssh.RunCommand("sudo pihole enable");
-                    ssh.Disconnect();
-                    return cmd.ExitStatus == 0;
-                }
-                catch { return false; }
-            });
+            if (!IsConnected)
+                throw new InvalidOperationException("SSH is not connected.");
+
+            var result = _client.RunCommand(command);
+            return result.Result;
         }
 
-        public async Task<bool> DisablePiHoleForSecondsAsync(int seconds)
+        public void Disconnect()
         {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using var ssh = CreateClient();
-                    ssh.Connect();
-                    var cmd = ssh.RunCommand($"sudo pihole disable {seconds}s");
-                    ssh.Disconnect();
-                    return cmd.ExitStatus == 0;
-                }
-                catch { return false; }
-            });
+            if (_client != null && _client.IsConnected)
+                _client.Disconnect();
         }
 
-        public async Task<string> RunCustomCommandAsync(string command)
+        public void Dispose()
         {
-            return await Task.Run(() =>
-            {
-                try
-                {
-                    using var ssh = CreateClient();
-                    ssh.Connect();
-                    var cmd = ssh.RunCommand(command);
-                    ssh.Disconnect();
-                    return cmd.Result;
-                }
-                catch
-                {
-                    return string.Empty;
-                }
-            });
+            try { _client?.Dispose(); } catch { }
         }
     }
 }
