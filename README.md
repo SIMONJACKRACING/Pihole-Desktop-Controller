@@ -3,7 +3,7 @@ Download Latest Build:
 https://github.com/WL-Chan/Pihole-Desktop-Controller/releases/download/latest/PiholeDesktopController.zip
 
 <details>
-<summary>📸 Screenshots</summary>
+<summary>Screenshots</summary>
 
 ### Login Page
 ![Login Page](screenshots/Login-Page.png)
