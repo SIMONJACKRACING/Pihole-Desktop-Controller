@@ -1,3 +1,7 @@
+# Pi-hole Desktop Controller (Partial Open Source Release)
+Download Latest Build:
+https://github.com/WL-Chan/Pihole-Desktop-Controller/releases/download/latest/PiholeDesktopController.zip
+
 <details>
 <summary>📸 Screenshots</summary>
 
@@ -22,12 +26,6 @@
 ### Pause Ad Blocking
 ![Pause Blocking](screenshots/Pause-Ad-Blocking.png)
 </details>
-
-
-# Pi-hole Desktop Controller (Partial Open Source Release)
-Download Latest Build:
-https://github.com/WL-Chan/Pihole-Desktop-Controller/releases/download/latest/PiholeDesktopController.zip
-
 
 This repository contains the connection and command logic used by the Pi-hole Desktop Controller application.  
 Only the SSH and command-related components are provided here.  
